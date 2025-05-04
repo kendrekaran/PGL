@@ -275,6 +275,7 @@ export default function ExplorePage() {
           gender: item.gender,
           saved: false,
           city: item.city.toLowerCase(),
+          _id: item._id, // Ensure the MongoDB ID is preserved
         }));
         
         setUserAddedListings(formattedListings);
@@ -393,7 +394,8 @@ export default function ExplorePage() {
     showToast("PG added to favorites!", "success")
   }
 
-  const handlePGClick = (id: number) => {
+  const handlePGClick = (id: any) => {
+    // Use MongoDB _id when available, otherwise use the numeric id
     router.push(`/explore/${id}`)
   }
 
@@ -685,7 +687,7 @@ export default function ExplorePage() {
             {filteredPgListings.map((listing) => (
               <Card key={listing.id} className="overflow-hidden">
                 <div className="relative">
-                  <div className="relative h-48 cursor-pointer" onClick={() => handlePGClick(listing.id)}>
+                  <div className="relative h-48 cursor-pointer" onClick={() => handlePGClick(listing._id || listing.id)}>
                     <Image src={listing.image || "/placeholder.svg"} alt={listing.title} fill className="object-cover" />
                   </div>
                   <Button
@@ -700,7 +702,7 @@ export default function ExplorePage() {
                   </Button>
                   <Badge className="absolute top-2 left-2">{listing.gender}</Badge>
                 </div>
-                <CardContent className="p-6 cursor-pointer" onClick={() => handlePGClick(listing.id)}>
+                <CardContent className="p-6 cursor-pointer" onClick={() => handlePGClick(listing._id || listing.id)}>
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-bold">{listing.title}</h3>
                     <Badge variant="outline" className="text-primary">
@@ -743,7 +745,7 @@ export default function ExplorePage() {
                       <span className="font-medium">{listing.rating}</span>
                       <span className="text-muted-foreground text-sm ml-1">({listing.reviews} reviews)</span>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => handlePGClick(listing._id || listing.id)}>
                       View Details
                     </Button>
                   </div>
@@ -757,7 +759,7 @@ export default function ExplorePage() {
               <Card key={listing.id} className="overflow-hidden">
                 <div className="flex flex-col md:flex-row">
                   <div className="relative md:w-1/3">
-                    <div className="relative h-48 md:h-full cursor-pointer" onClick={() => handlePGClick(listing.id)}>
+                    <div className="relative h-48 md:h-full cursor-pointer" onClick={() => handlePGClick(listing._id || listing.id)}>
                       <Image
                         src={listing.image || "/placeholder.svg"}
                         alt={listing.title}
@@ -777,7 +779,7 @@ export default function ExplorePage() {
                     </Button>
                     <Badge className="absolute top-2 left-2">{listing.gender}</Badge>
                   </div>
-                  <CardContent className="p-6 md:w-2/3 cursor-pointer" onClick={() => handlePGClick(listing.id)}>
+                  <CardContent className="p-6 md:w-2/3 cursor-pointer" onClick={() => handlePGClick(listing._id || listing.id)}>
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-xl font-bold">{listing.title}</h3>
                       <Badge variant="outline" className="text-primary">
@@ -824,7 +826,7 @@ export default function ExplorePage() {
                         <Button variant="outline" size="sm">
                           Contact
                         </Button>
-                        <Button size="sm">View Details</Button>
+                        <Button size="sm" onClick={() => handlePGClick(listing._id || listing.id)}>View Details</Button>
                       </div>
                     </div>
                   </CardContent>
